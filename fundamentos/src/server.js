@@ -35,6 +35,14 @@ import http from 'node:http'
 //Cabeçalhos (Requisição/Resposta) => Metadados
 //Precisamos informar através do cabeçalho que tipo de formato estamos enviando
 
+//HTTP Status code 
+
+// information responses 100 - 199
+//sucessful responses 200 - 299
+//redirection messages 300 - 399
+//client error responses 400 - 499
+//server error responses 500 - 599
+
 const users = []
 
 const server = http.createServer((req, res) => {
@@ -53,10 +61,10 @@ const server = http.createServer((req, res) => {
       email: 'johndoe@gmail.com'
     })
 
-    return res.end('Criação de usuários')
+    return res.writeHead(201).end()
   }
 
-  return res.end('Hello tste')
+  return res.writeHead(404).end()
 })
 
 server.listen(3333)
