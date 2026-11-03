@@ -4,6 +4,7 @@
 //ESModules => import/export
 
 import http from 'node:http'
+import { json } from './middlewares/json.js'
 
 //Como fazemos para diferenciar um módulo terceiro para um módulo que é interno do Node? Devemos colocar um pre fixo antes do import de cada modulo interno 'node:http'
 
@@ -48,22 +49,10 @@ const users = []
 const server = http.createServer( async (req, res) => {
   const { method, url } = req
 
-  const buffers = []
-
-  //Aguardar cada pedaço da strem ser retornada
-  for await (const chunck of req) {
-    buffers.push(chunck)
-  }
-  try {
-     req.body = JSON.parse(Buffer.concat(buffers).toString())
-  } catch{
-    req.body = null
-  }
- 
+  await json(req, res)
 
   if (method === 'GET' && url === '/users') {
     return res
-    .setHeader('Content-type', 'application/json')
     .end(JSON.stringify(users))
   }
 
