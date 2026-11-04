@@ -3,9 +3,6 @@
 //CommonJS => require
 //ESModules => import/export
 
-import http from 'node:http'
-import { json } from './middlewares/json.js'
-
 //Como fazemos para diferenciar um módulo terceiro para um módulo que é interno do Node? Devemos colocar um pre fixo antes do import de cada modulo interno 'node:http'
 
 //localhost:3333
@@ -44,7 +41,13 @@ import { json } from './middlewares/json.js'
 //client error responses 400 - 499
 //server error responses 500 - 599
 
-const users = []
+
+import http from 'node:http'
+import { json } from './middlewares/json.js'
+import { Database } from './database.js'
+
+
+const database = new Database()
 
 const server = http.createServer( async (req, res) => {
   const { method, url } = req
@@ -52,19 +55,22 @@ const server = http.createServer( async (req, res) => {
   await json(req, res)
 
   if (method === 'GET' && url === '/users') {
-    return res
-    .end(JSON.stringify(users))
+    const users = database.select('users')
+
+    return res.end(JSON.stringify(users))
   }
 
   if (method === 'POST' && url === '/users') {
 
     const {name, email} = req.body
 
-    users.push({
+    const user = {
       id: 1,
       name,
-      email,
-    })
+      email
+    }
+
+    database.insert('users', user)
 
     return res.writeHead(201).end()
   }
