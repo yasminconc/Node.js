@@ -45,12 +45,17 @@
 import http from 'node:http'
 import { json } from './middlewares/json.js'
 import { routes } from './routes.js'
-import { log } from 'node:console'
 
+//Query Parameters: URL Stateful => Filtros, paginação, não-obrigatórios
+//Route Parameters: Identificação de recurso
+//Request Body: Envio de informações de um formulário (Https)
+
+//http://localhost:3333/users?userID=1&name=Diego
+
+//GET http://localhost:3333/users/1
+//Delete http://localhost:3333/users/1
 
 //UUID => Unique Universal ID
-
-
 
 
 const server = http.createServer( async (req, res) => {
